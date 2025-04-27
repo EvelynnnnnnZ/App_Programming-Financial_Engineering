@@ -82,3 +82,106 @@ Visualization: Multiple plots illustrated the evolution of asset weights across 
 Heuristic Insights: Careful attention was paid to understanding why certain convergence criteria were necessary under constraints, and how momentum improved optimization stability and speed.
 
 The project also includes a thorough understanding of all parameters used (π, θ, learning rate α, momentum β) and how they influenced both convergence behavior and final portfolio composition.
+
+
+### Project 5: Stock Clustering, Return Prediction, and Constrained Portfolio Optimization
+
+This project developed a complete pipeline for financial decision-making, involving stock clustering, predictive modeling, portfolio optimization under custom constraints, and dynamic trading strategy using dynamic programming.
+
+The project included four major components:
+
+Task 1: Clustering Stocks Based on Market Features
+
+In this task, we clustered 10 major stocks into 3 groups using the following features:
+
+Average daily returns
+
+Variance of daily returns
+
+Average daily trading volume
+
+Variance of daily trading volume
+
+Key steps included:
+
+Feature Standardization: All features were standardized to avoid domination by high-magnitude variables like volume.
+
+Multiple Clustering Methods: We applied both K-Means and Hierarchical Agglomerative Clustering (HAC).
+
+Cluster Evaluation: Silhouette scores were used to select the better clustering; K-Means clustering was chosen with a higher score (0.4052 vs. 0.3748).
+
+Final Clusters: Stocks were divided into three clusters, forming the basis for later diversification constraints in portfolio construction.
+
+Task 2: Predicting Daily Stock Returns
+
+We built regression models to predict next-day returns for each stock cluster.
+
+Key highlights:
+
+Sliding Window Cross-Validation: A rolling window was used to validate model parameters, including lag lengths, Ridge/Lasso penalties, and regularization strength.
+
+Cluster-Based Modeling: Models were built separately for each cluster to capture internal structure among correlated stocks.
+
+Model Selection: The best combination of lag, penalty type, and regularization coefficient was selected based on minimizing cross-validated RMSE.
+
+Out-of-Sample Testing: The models were evaluated on data from January to June 2019, demonstrating stable prediction performance.
+
+Task 3: Constrained Portfolio Optimization
+
+Using predicted returns and a historical sample covariance matrix, we constructed optimal portfolios subject to real-world investment constraints.
+
+Task 3.1: Mean-Variance Optimization with Diversification Constraints
+
+Objective: Maximize (predicted return) minus (risk penalty), i.e., maximize r_hat^T x - lambda * x^T Sigma x.
+
+Constraints:
+
+Long-only: weights x_j >= 0
+
+Fully invested: sum of weights equals 1
+
+Diversification: total weights in each cluster ≤ 0.5
+
+Optimization Approach: We implemented a projected gradient descent (PGD) algorithm alternating projections onto each constraint set.
+
+Lambda Exploration: Different values of risk-aversion parameter lambda were tested to understand their impact on portfolio concentration and risk.
+
+Task 3.2: Mean-Variance Optimization with Turnover Constraints
+
+Additional Constraint: Turnover constraint requiring |x_j - x0_j| <= 0.1 for each stock, where x0 is the previous day's portfolio.
+
+Modified PGD: The projected gradient descent was extended with an extra turnover projection after each update.
+
+Alternative Approach: A penalty method was also developed as a baseline, where constraint violations were incorporated directly into the objective function, but PGD consistently achieved better optimization results.
+
+Comparison to SciPy Solver: As a validation step, we implemented an equivalent optimization using SciPy’s minimize() function and verified the quality of our custom algorithms.
+
+Task 4: Optimal Multi-Day Trading Strategy Using Dynamic Programming
+
+We developed an optimal trading strategy for GS stock over an 8-day horizon, using dynamic programming techniques under trading and liquidity constraints.
+
+Key highlights:
+
+Problem Setup:
+
+Initial cash balance: $100 million
+
+Inventory bounds: 0 to 1,000,000 shares
+
+Trading limit: no more than 0.1% of daily volume
+
+No shorting and cash must remain non-negative.
+
+Naive Dynamic Programming: A standard DP solution was first implemented with a complexity of O(days * max_inventory * max_volume_per_day).
+
+Vectorized DP with Segment Tree Acceleration:
+
+We developed a segment tree-based method to accelerate maximum queries across inventory states.
+
+This improved the runtime to O(days * max_inventory * log(max_inventory)), making it feasible for realistic inventory sizes.
+
+The approach avoided building enormous transition matrices by smartly querying maximum values over feasible inventory transitions.
+
+Final Trading Strategy: The optimized trading plan produced a substantial increase in final cash balance while respecting all constraints on each day.
+
+Overall, this project showcased a comprehensive application of machine learning, optimization, and algorithmic trading techniques in finance. We integrated clustering analysis, predictive modeling with regression, advanced constrained optimization using projected gradient methods, and dynamic programming with segment trees to design realistic, actionable trading and investment strategies.
