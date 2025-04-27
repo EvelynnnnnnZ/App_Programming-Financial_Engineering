@@ -45,3 +45,40 @@ Interval Testing and Heatmaps: By analyzing both original and differenced data, 
 Validation through Random Walk Analysis: Additional plots demonstrated how the identified polluted intervals exhibited patterns inconsistent with typical random walk behavior, suggesting these intervals were genuinely anomalous rather than random fluctuations.
 
 Comprehensive Interval Selection: The project meticulously analyzed multiple intervals, ultimately selecting an interval where anomalies consistently manifested across different analyses.
+
+
+### Project 4: Portfolio Construction with Gradient-Based Optimization
+
+This project centered on constructing an optimized long-only portfolio using daily stock price data, with an emphasis on solving custom risk-return tradeoff problems through gradient-based methods.
+
+The project introduced two primary tasks:
+
+Task 1: Unconstrained Portfolio Optimization with Clipping
+We developed a gradient descent algorithm with momentum to solve an optimization problem that balances maximizing expected returns against penalizing large risk, measured as a powered deviation of excess returns. Key elements included:
+
+Gradient and Momentum-Based Descent: A first-order method was implemented with an exponentially weighted moving average of gradients (momentum) to speed convergence and smooth out oscillations.
+
+Projection via Clipping: After each gradient step, weights were clipped within [-1, 1] to enforce asset exposure constraints.
+
+Convergence Heuristic: Instead of relying on the gradient norm (which could remain nonzero due to projection), we monitored changes in the objective value to detect convergence efficiently.
+
+Systematic Parameter Exploration: The optimization was run for different values of risk exponent π (2, 4, 6) and a range of θ values, carefully analyzing their influence on convergence and portfolio behavior.
+
+Task 2: Constrained Portfolio Optimization with Simplex Projection
+We extended the previous setup to handle an additional set of realistic investment constraints: weights must be non-negative and sum to one. To achieve this:
+
+Simplex Projection: We implemented a novel projection method from research literature to map arbitrary weight vectors onto the probability simplex.
+
+Modified Gradient Descent: The same gradient and momentum logic was adapted, replacing clipping with simplex projection after each update.
+
+Comprehensive Testing: As in Task 1, we ran systematic experiments across varying π and θ, monitoring convergence and plotting the evolution of portfolio weights.
+
+Additional Highlights:
+
+Data Handling: Stock data for six major companies (GOOG, TSLA, AAPL, GS, A, AAP) was downloaded using Yahoo Finance API, and both open and adjusted close prices were used to compute daily returns.
+
+Visualization: Multiple plots illustrated the evolution of asset weights across iterations and the convergence of objective values under different parameter choices.
+
+Heuristic Insights: Careful attention was paid to understanding why certain convergence criteria were necessary under constraints, and how momentum improved optimization stability and speed.
+
+The project also includes a thorough understanding of all parameters used (π, θ, learning rate α, momentum β) and how they influenced both convergence behavior and final portfolio composition.
